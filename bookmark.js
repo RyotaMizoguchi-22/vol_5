@@ -1,5 +1,4 @@
 console.log("hello");
-let actionEnabled = true;
 chrome.action.onClicked.addListener((tab) => {
   chrome.bookmarks.getTree(function(bookmarkTreeNodes) {
       // ブックマークツリーのルートノードを取得

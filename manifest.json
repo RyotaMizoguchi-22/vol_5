@@ -4,7 +4,7 @@
     "version": "1.0",
     "description": "bookmark test",
     "permissions": ["bookmarks"],
-    "action": {},
+    "action": {"default_popup": "popup.html"},
     "background":{
       "service_worker":"bookmark.js"
     }

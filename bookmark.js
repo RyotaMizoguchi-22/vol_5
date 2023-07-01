@@ -1,4 +1,14 @@
 console.log("hello");
+var myArray = ["データ1", "データ2", "データ3"];
+
+$(document).ready(function() {
+    var dataList = $("#data-list");
+  
+    for (var i = 0; i < myArray.length; i++) {
+      var listItem = $("<li>").text(myArray[i]);
+      dataList.append(listItem);
+    }
+  });
 chrome.action.onClicked.addListener((tab) => {
   chrome.bookmarks.getTree(function(bookmarkTreeNodes) {
       // ブックマークツリーのルートノードを取得
@@ -23,6 +33,18 @@ chrome.action.onClicked.addListener((tab) => {
         }
 
       }
+
+      chrome.runtime.getBackgroundPage(function(backgroundPage) {
+        var myArray = backgroundPage.myArray;
+      
+        var dataList = document.getElementById("data-list");
+      
+        for (var i = 0; i < myArray.length; i++) {
+          var listItem = document.createElement("li");
+          listItem.textContent = myArray[i];
+          dataList.appendChild(listItem);
+        }
+      });
     
       // ルートフォルダ内のブックマークを取得する関数
       function getBookmarks(bookmarkNode) {
@@ -44,26 +66,15 @@ chrome.action.onClicked.addListener((tab) => {
           console.log('URLの頭:', url_key);
           console.log('------------------');
 
-        //   let myDict = {
-        //   }
-
-        //   if(myDict[url_key]){
-        //     myDict[url_key].push(url);
-        //   }else{
-        //     myDict[url_key]=[url]
-        //   }
-
         storageArray(url_key, bookmarkNode);
         for (let key in sameUrlContent) {
             console.log(`Key: ${key}, Value: ${sameUrlContent[key]}`);
-            let url_head = sameUrlContent[key];
-            for (let i = 0; i < url_head.length; i++) {
-                console.log('URLの頭:', url_head[i].title);
-                console.log('URL:', url_head[i].url);
+            let node = sameUrlContent[key];
+            for (let i = 0; i < node.length; i++) {
+                console.log('ページ名:', node[i].title);
+                console.log('URL:', node[i].url);
               }
-            
           }
-          //console.log(Object.keys(myDict));
         }
       }
     

@@ -1,8 +1,11 @@
 {
-    "name": "Test_jQuery",
-    "manifest_version": 3,
-    "version": "1.0",
-    "description": "jQuery_test",
-    "permissions": ["bookmarks"],
-    "action": {"default_popup": "popup.html"}
+  "name": "お母さんと一緒",
+  "manifest_version": 3,
+  "version": "11.2",
+  "description": "jQuery_test",
+  "permissions": ["bookmarks"],
+  "action": {
+    "default_icon": "mother_angry.png",
+    "default_popup": "popup.html"
   }
+}

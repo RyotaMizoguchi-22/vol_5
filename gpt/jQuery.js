@@ -7,18 +7,7 @@ $('#search').on('input', function () {
 function dumpBookmarks(query) {
   chrome.bookmarks.getTree(function (bookmarkTreeNodes) {
     const groupedBookmarks = groupBookmarksByHostname(bookmarkTreeNodes);
-    for (const hostname in groupedBookmarks) {
-      const bookmarkGroup = groupedBookmarks[hostname];
-      const groupContainer = createBookmarkGroupContainer(hostname);
-      const bookmarksList = $('<ul>');
-      for (let i = 0; i < bookmarkGroup.length; i++) {
-        const bookmarkNode = bookmarkGroup[i];
-        const bookmarkItem = dumpNode(bookmarkNode, query);
-        bookmarksList.append(bookmarkItem);
-      }
-      groupContainer.append(bookmarksList);
-      $('#bookmarks').append(groupContainer);
-    }
+    displayGroupedBookmarks(groupedBookmarks, query, $('#bookmarks'));
   });
 }
 
@@ -28,7 +17,7 @@ function groupBookmarksByHostname(bookmarkNodes) {
     const bookmarkNode = bookmarkNodes[i];
     if (bookmarkNode.children && bookmarkNode.children.length > 0) {
       const childBookmarks = groupBookmarksByHostname(bookmarkNode.children);
-      Object.assign(groupedBookmarks, childBookmarks);
+      mergeGroupedBookmarks(groupedBookmarks, childBookmarks);
     }
     if (bookmarkNode.url) {
       const hostname = getHostnameFromUrl(bookmarkNode.url);
@@ -39,6 +28,15 @@ function groupBookmarksByHostname(bookmarkNodes) {
     }
   }
   return groupedBookmarks;
+}
+
+function mergeGroupedBookmarks(target, source) {
+  for (const hostname in source) {
+    if (!target[hostname]) {
+      target[hostname] = [];
+    }
+    target[hostname] = target[hostname].concat(source[hostname]);
+  }
 }
 
 function getHostnameFromUrl(url) {
@@ -52,6 +50,21 @@ function createBookmarkGroupContainer(hostname) {
   const title = $('<h3>').text(hostname);
   container.append(title);
   return container;
+}
+
+function displayGroupedBookmarks(groupedBookmarks, query, container) {
+  for (const hostname in groupedBookmarks) {
+    const bookmarkGroup = groupedBookmarks[hostname];
+    const groupContainer = createBookmarkGroupContainer(hostname);
+    const bookmarksList = $('<ul>');
+    for (let i = 0; i < bookmarkGroup.length; i++) {
+      const bookmarkNode = bookmarkGroup[i];
+      const bookmarkItem = dumpNode(bookmarkNode, query);
+      bookmarksList.append(bookmarkItem);
+    }
+    groupContainer.append(bookmarksList);
+    container.append(groupContainer);
+  }
 }
 
 function dumpNode(bookmarkNode, query) {

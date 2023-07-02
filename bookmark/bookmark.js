@@ -1,52 +1,70 @@
-console.log(`hello`);
-chrome.action.onClicked.addListener((tab) => {
-  chrome.bookmarks.getTree(function(bookmarkTreeNodes) {
-      // ブックマークツリーのルートノードを取得
-      const rootBookmarkNode = bookmarkTreeNodes[0];
-      let sameUrlContent = {};
+let sameUrlContent = {};
 
-      function handleUrlhead(url) {
-        let url_tmp = new URL(url);
-        return url_tmp.hostname
+$('#search').change(function () {
+  $('#bookmarks').empty();
+  sameUrlContent = {};
+  dumpBookmarks($('#search').val());
+  console.log('search_val:', $('#search').val());
+});
+
+function dumpBookmarks(query) {
+  chrome.bookmarks.getTree(function (bookmarkTreeNodes) {
+    dumpTreeNodes(bookmarkTreeNodes, query);
+    renderSameUrlContent();
+  });
+}
+
+function dumpTreeNodes(bookmarkNodes, query) {
+  for (let i = 0; i < bookmarkNodes.length; i++) {
+    dumpNode(bookmarkNodes[i], query);
+  }
+}
+
+function dumpNode(bookmarkNode, query) {
+  if (bookmarkNode.title) {
+    if (bookmarkNode.children) {
+      dumpTreeNodes(bookmarkNode.children, query);
+    } else if (bookmarkNode.url) {
+      if (!query || bookmarkNode.title.toLowerCase().indexOf(query.toLowerCase()) != -1) {
+        const url_key = handleUrlhead(bookmarkNode.url);
+        storageArray(url_key, bookmarkNode);
       }
+    }
+  }
+}
 
-      function storageArray(url_key, url){
+function handleUrlhead(url) {
+  const url_tmp = new URL(url);
+  return url_tmp.hostname;
+}
 
-        let key = url_key;  // 追加したいキー
+function storageArray(url_key, bookmarkNode) {
+  if (sameUrlContent[url_key]) {
+    sameUrlContent[url_key].push(bookmarkNode);
+  } else {
+    sameUrlContent[url_key] = [bookmarkNode];
+  }
+}
 
-        // キーが存在すればその配列に値を追加、存在しなければ新たに配列を作成
-        if (sameUrlContent[key]) {
-          sameUrlContent[key].push(url);
-        } else {
-          sameUrlContent[key] = [url];
-        }
-
-      }
-    
-      // ルートフォルダ内のブックマークを取得する関数
-      function getBookmarks(bookmarkNode) {
-        // ブックマークノードがフォルダである場合
-        if (bookmarkNode.children) {
-          // サブフォルダのブックマークを再帰的に取得
-          for (const childNode of bookmarkNode.children) {
-            getBookmarks(childNode);
-          }
-        } else {
-          // ブックマークノードがブックマークの場合
-          console.log('ブックマーク名:', bookmarkNode.title);
-          console.log('URL:', bookmarkNode.url);
-          console.log('親フォルダID:', bookmarkNode.parentId);
-          let url_key = handleUrlhead(bookmarkNode.url);
-          console.log('URLの頭:', url_key);
-          storageArray(url_key, bookmarkNode.url);
-          for (let key in sameUrlContent) {
-            console.log(`Key: ${key}, Value: ${sameUrlContent[key]}`);
-          }
-          console.log('------------------');
-        }
-      }
-    
-      // ルートフォルダ内のブックマークを取得する
-      getBookmarks(rootBookmarkNode);
+function renderSameUrlContent() {
+  for (let url_key in sameUrlContent) {
+    const list = $('<ul>');
+    sameUrlContent[url_key].forEach(function(bookmarkNode) {
+      const anchor = $('<a>');
+      anchor.attr('href', bookmarkNode.url);
+      anchor.text(bookmarkNode.title);
+      anchor.click(function () {
+        chrome.tabs.create({ url: bookmarkNode.url });
+      });
+      const span = $('<span>');
+      span.append(anchor);
+      const li = $('<li>').append(span);
+      list.append(li);
     });
-})
+    $('#bookmarks').append($('<h2>').text(url_key), list);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  dumpBookmarks();
+});

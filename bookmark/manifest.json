@@ -1,11 +1,13 @@
 {
-  "name": "bookmark",
-  "manifest_version": 3,
+  "manifest_version": 2,
+  "name": "Bookmark Search and Grouping",
   "version": "1.0",
-  "description": "bookmark test",
-  "permissions": ["bookmarks"],
-  "action": {},
-  "background":{
-    "service_worker":"bookmark.js"
-  }
+  "description": "Search and group bookmarks based on the domain",
+  "browser_action": {
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "tabs",
+    "bookmarks"
+  ]
 }

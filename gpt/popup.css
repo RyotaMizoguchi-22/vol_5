@@ -1,0 +1,52 @@
+body {
+  font-family: 'Arial', sans-serif;
+  width: 400px;
+  min-height: 150px;
+  background-color: #f4f4f4;
+  color: #333;
+  padding: 10px;
+  overflow: auto;
+}
+
+#editdialog input {
+  width: 100%;
+  padding: 5px;
+  margin-bottom: 10px;
+  border-radius: 3px;
+  border: 1px solid #ccc;
+}
+
+#search {
+  width: calc(100% - 10px);
+  padding: 5px;
+  margin-bottom: 20px; /* added margin-bottom */
+  border-radius: 3px;
+  border: 1px solid #ccc;
+}
+
+.bookmark-group {
+  background-color: white;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 3px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.bookmark-group h3 {
+  margin-top: 0;
+  color: #666;
+  font-size: 1.2em;
+}
+
+.bookmark-group ul {
+  padding-left: 20px;
+}
+
+.bookmark-group a {
+  color: #3366cc;
+  text-decoration: none;
+}
+
+.bookmark-group a:hover {
+  text-decoration: underline;
+}

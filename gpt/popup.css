@@ -1,52 +1,55 @@
 body {
-  font-family: 'Arial', sans-serif;
+  font-family: 'Roboto', sans-serif;
   width: 400px;
   min-height: 150px;
-  background-color: #f4f4f4;
+  background-color: #fafafa;
   color: #333;
-  padding: 10px;
+  padding: 20px;
   overflow: auto;
 }
 
-#editdialog input {
+#editdialog input, #search {
   width: 100%;
-  padding: 5px;
-  margin-bottom: 10px;
-  border-radius: 3px;
-  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: none;
+  border-radius: 20px;
+  box-shadow: 0 0 15px 4px rgba(0, 0, 0, 0.06);
+  outline: none;
+  transition: all 0.3s ease-in-out;
 }
 
-#search {
-  width: calc(100% - 10px);
-  padding: 5px;
-  margin-bottom: 20px; /* added margin-bottom */
-  border-radius: 3px;
-  border: 1px solid #ccc;
+#editdialog input:focus, #search:focus {
+  box-shadow: 0 0 15px 4px rgba(255, 140, 0, 0.5);
 }
 
 .bookmark-group {
-  background-color: white;
-  padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 3px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  background-color: #ffffff; /* changed to pure white */
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.1);
 }
 
 .bookmark-group h3 {
   margin-top: 0;
-  color: #666;
+  color: #333;
   font-size: 1.2em;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 10px;
 }
 
 .bookmark-group ul {
-  padding-left: 20px;
+  padding-left: 30px;
 }
 
 .bookmark-group a {
-  color: #3366cc;
+  color: #2980b9;
   text-decoration: none;
+  transition: color 0.3s ease-in-out;
 }
 
 .bookmark-group a:hover {
-  text-decoration: underline;
+  color: #e67e22;
 }

@@ -12,6 +12,7 @@ function dumpBookmarks(query) {
     //BookMarkを全て取得
     const bookmarkTreeNodes = chrome.bookmarks.getTree(function (bookmarkTreeNodes) {
       //"bookmarks"(htmlファイル内id)内の末尾にHTMLを追加する。
+      //console.log('aiueo');
       $('#bookmarks').append(dumpTreeNodes(bookmarkTreeNodes, query));
     });
 }
